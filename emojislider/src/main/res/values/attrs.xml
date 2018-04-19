@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="EmojiRateSlider"></declare-styleable>
+    <declare-styleable name="EmojiRateSlider">
+        <attr name="ers_has_weird" format="boolean" />
+        <attr name="ers_color_weird" format="color" />
+        <attr name="ers_color_sad" format="color" />
+        <attr name="ers_color_happy" format="color" />
+        <attr name="ers_color_bg" format="color" />
+        <attr name="ers_icon_weird" format="reference" />
+        <attr name="ers_icon_happy" format="reference" />
+        <attr name="ers_icon_sad" format="reference" />
+        <attr name="ers_max" format="integer" />
+        <attr name="ers_progress" format="integer" />
+    </declare-styleable>
 </resources>
