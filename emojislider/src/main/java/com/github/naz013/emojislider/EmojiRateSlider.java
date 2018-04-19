@@ -237,7 +237,7 @@ public class EmojiRateSlider extends View {
 
     private void notifyChanged() {
         if (getOnMoodChangeListener() != null) {
-            getOnMoodChangeListener().onMoodChanged(mSelectedItem);
+            getOnMoodChangeListener().onMoodChanged(this, mSelectedItem);
         }
     }
 
@@ -388,6 +388,6 @@ public class EmojiRateSlider extends View {
     }
 
     public interface OnMoodChangeListener {
-        void onMoodChanged(int mood);
+        void onMoodChanged(View view, int mood);
     }
 }

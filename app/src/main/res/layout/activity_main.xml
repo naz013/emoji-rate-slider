@@ -14,11 +14,38 @@
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_gravity="center"
-        app:ers_color_happy="#4CAF50"
-        app:ers_color_sad="#F44336"
-        app:ers_color_weird="#FF9800"
+        app:ers_color_bg="#fefefe"
+        app:ers_color_happy="#51ED8B"
+        app:ers_color_sad="#ED6651"
+        app:ers_has_weird="false"
+        app:ers_max="9"
+        app:ers_progress="8" />
+
+    <com.github.naz013.emojislider.EmojiRateSlider
+        android:id="@+id/mood_slider2"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        app:ers_color_bg="#fefefe"
+        app:ers_color_happy="#51ED8B"
+        app:ers_color_sad="#ED6651"
+        app:ers_has_weird="false"
+        app:ers_max="9"
+        app:ers_progress="0" />
+
+    <com.github.naz013.emojislider.EmojiRateSlider
+        android:id="@+id/mood_slider3"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        app:ers_color_bg="#fefefe"
+        app:ers_color_happy="#51ED8B"
+        app:ers_color_sad="#ED6651"
+        app:ers_color_weird="#FFC107"
         app:ers_has_weird="true"
-        app:ers_max="5"
-        app:ers_progress="2" />
+        app:ers_max="9"
+        app:ers_progress="4" />
 
 </LinearLayout>
