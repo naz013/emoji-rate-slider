@@ -1,11 +1,11 @@
 # emoji-rate-slider
 Simple emoji rate picker slider
 
-[![](https://jitpack.io/v/naz013/ColorSlider.svg)](https://jitpack.io/#naz013/ColorSlider)
+[![](https://jitpack.io/v/naz013/emoji-rate-slider.svg)](https://jitpack.io/#naz013/emoji-rate-slider)
 
 Screenshot
 
-<img src="https://github.com/naz013/ColorSlider/raw/master/res/screenshot.png" width="400" alt="Screenshot">
+<img src="https://github.com/naz013/emoji-rate-slider/raw/master/res/screenshot.png" width="400" alt="Screenshot">
 
 Download
 --------
@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.naz013:ColorSlider:1.0.0'
+    implementation 'com.github.naz013:emoji-rate-slider:1.0.0'
 }
 ```
 
