@@ -1,4 +1,4 @@
-# emoji-rate-slider
+# EmojiRateSlider
 Simple emoji rate picker slider
 
 [![](https://jitpack.io/v/naz013/emoji-rate-slider.svg)](https://jitpack.io/#naz013/emoji-rate-slider)
