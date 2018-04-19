@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.annotation.Px;
@@ -348,6 +350,26 @@ public class EmojiRateSlider extends View {
         mColorPaint.setStyle(Paint.Style.FILL);
 
         canvas.drawRect(start.centerX(), start.top + m, end.centerX(), end.bottom - m, mColorPaint);
+    }
+
+    @Nullable
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle savedInstance = new Bundle();
+        savedInstance.putParcelable("super", super.onSaveInstanceState());
+        savedInstance.putInt("position", mSelectedItem);
+        return savedInstance;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state instanceof Bundle) {
+            Bundle savedInstance = (Bundle) state;
+            mSelectedItem = savedInstance.getInt("position", mSelectedItem);
+            super.onRestoreInstanceState(savedInstance.getParcelable("super"));
+        } else {
+            super.onRestoreInstanceState(state);
+        }
     }
 
     @Override
