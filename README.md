@@ -1,6 +1,9 @@
 # EmojiRateSlider
 Simple emoji rate picker slider
 
+Inspired by this work - https://www.uplabs.com/posts/on-off-switch-daily-ui-015-art
+--------
+
 [![](https://jitpack.io/v/naz013/emoji-rate-slider.svg)](https://jitpack.io/#naz013/emoji-rate-slider)
 
 Screenshot
