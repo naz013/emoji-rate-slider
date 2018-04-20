@@ -44,7 +44,8 @@ public class EmojiRateSlider extends View {
     private static final String TAG = "EmojiRateSlider";
     private static final float FIRST_LAYER = 0.82f;
     private static final float SECOND_LAYER = 0.72f;
-    private static final float THIRD_LAYER = 0.97f;
+    private static final float THIRD_LAYER = 0.95f;
+    private static final float THIRD_LAYER_TAPPED = 0.98f;
 
     private Rect[] mRects = new Rect[]{};
     private Paint mShadowPaint;
@@ -54,6 +55,7 @@ public class EmojiRateSlider extends View {
     private int mSelectedItem = 2;
     private boolean hasWeird = true;
     private boolean wasSlided = false;
+    private boolean isTapped = false;
 
     @ColorInt
     private int mSadColor = Color.RED;
@@ -229,14 +231,19 @@ public class EmojiRateSlider extends View {
     private boolean processTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             wasSlided = false;
+            isTapped = true;
             if (mAnimator != null) mAnimator.cancel();
+            invalidate();
             return true;
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
             wasSlided = true;
+            isTapped = true;
             updateView(event.getX(), event.getY(), true);
             return true;
-        } else if (event.getAction() == MotionEvent.ACTION_UP && !wasSlided) {
-            animate(mSelectedItem, findIndex(event.getX(), event.getY()));
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            isTapped = false;
+            if (!wasSlided) animate(mSelectedItem, findIndex(event.getX(), event.getY()));
+            else invalidate();
         }
         return false;
     }
@@ -321,7 +328,7 @@ public class EmojiRateSlider extends View {
     private void drawCurrent(Canvas canvas) {
         Rect rect = mRects[mSelectedItem];
 
-        int h = (int) (rect.height() * THIRD_LAYER);
+        int h = (int) (rect.height() * (isTapped ? THIRD_LAYER_TAPPED : THIRD_LAYER));
         int radius = h / 2;
         int m = (rect.height() - h) / 2;
 
