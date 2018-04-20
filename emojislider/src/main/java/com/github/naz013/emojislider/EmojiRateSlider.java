@@ -1,5 +1,8 @@
 package com.github.naz013.emojislider;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -19,6 +22,7 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 
 /**
  * Copyright 2018 Nazar Suhovich
@@ -49,6 +53,7 @@ public class EmojiRateSlider extends View {
     private int mMax = 5;
     private int mSelectedItem = 2;
     private boolean hasWeird = true;
+    private boolean wasSlided = false;
 
     @ColorInt
     private int mSadColor = Color.RED;
@@ -64,6 +69,8 @@ public class EmojiRateSlider extends View {
     private Drawable mWeirdIcon;
     @Nullable
     private OnMoodChangeListener onMoodChangeListener;
+    @Nullable
+    private Animator mAnimator;
 
     public EmojiRateSlider(Context context) {
         this(context, null);
@@ -220,15 +227,61 @@ public class EmojiRateSlider extends View {
     }
 
     private boolean processTouch(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) return true;
-        else if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_UP) {
-            updateView(event.getX(), event.getY());
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            wasSlided = false;
+            if (mAnimator != null) mAnimator.cancel();
             return true;
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            wasSlided = true;
+            updateView(event.getX(), event.getY(), true);
+            return true;
+        } else if (event.getAction() == MotionEvent.ACTION_UP && !wasSlided) {
+            animate(mSelectedItem, findIndex(event.getX(), event.getY()));
         }
         return false;
     }
 
-    private void updateView(float x, float y) {
+    private void animate(int from, int to) {
+        if (from != to) {
+            Rect rFrom = mRects[from];
+            Rect rTo = mRects[to];
+
+            ValueAnimator animator = ValueAnimator.ofFloat(rFrom.centerX(), rTo.centerX());
+            animator.setDuration(150);
+            animator.setInterpolator(new DecelerateInterpolator());
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float value = (float) animation.getAnimatedValue();
+                    updateView(value, mRects[0].centerY(), false);
+                }
+            });
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(android.animation.Animator animation) {
+                    mAnimator = null;
+                    notifyChanged();
+                }
+
+                @Override
+                public void onAnimationStart(android.animation.Animator animation) {
+                }
+            });
+            animator.start();
+            mAnimator = animator;
+        }
+    }
+
+    private void updateView(float x, float y, boolean notify) {
+        int selected = findIndex(x, y);
+        if (selected != mSelectedItem) {
+            mSelectedItem = selected;
+            invalidate();
+            if (notify) notifyChanged();
+        }
+    }
+
+    private int findIndex(float x, float y) {
         int selected = 0;
         float minDist = calcDist(x, y, mRects[0]);
         for (int i = 0; i < mRects.length; i++) {
@@ -241,11 +294,7 @@ public class EmojiRateSlider extends View {
                 }
             }
         }
-        if (selected != mSelectedItem) {
-            mSelectedItem = selected;
-            notifyChanged();
-            invalidate();
-        }
+        return selected;
     }
 
     private float calcDist(float x, float y, Rect rect) {
