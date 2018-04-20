@@ -53,6 +53,7 @@ public class EmojiRateSlider extends View {
 
     private int mMax = 5;
     private int mSelectedItem = 2;
+    private float mPrevX;
     private boolean hasWeird = true;
     private boolean wasSlided = false;
     private boolean isTapped = false;
@@ -233,11 +234,13 @@ public class EmojiRateSlider extends View {
             wasSlided = false;
             isTapped = true;
             if (mAnimator != null) mAnimator.cancel();
+            mPrevX = event.getX();
             invalidate();
             return true;
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            wasSlided = true;
-            isTapped = true;
+            if (Math.abs(event.getX() - mPrevX) > 25) {
+                wasSlided = true;
+            }
             updateView(event.getX(), event.getY(), true);
             return true;
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
