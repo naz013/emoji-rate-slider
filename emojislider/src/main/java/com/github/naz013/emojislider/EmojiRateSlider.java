@@ -455,11 +455,10 @@ public class EmojiRateSlider extends View {
 
     private void drawMoods(Canvas canvas) {
         if (moods != null) {
+
             for (int i = 0; i <= mSelectedItem; i++) {
-                Mood mood = moods[i];
                 Rect rect = mRects[i];
                 mColorPaint.setStyle(Paint.Style.FILL);
-                mColorPaint.setColor(mBgColor);
                 if (i > 0) {
                     Rect start = mRects[i - 1];
                     Mood mood1 = moods[i - 1];
@@ -469,12 +468,9 @@ public class EmojiRateSlider extends View {
                     canvas.drawRect(start.centerX(), start.top + m, rect.centerX(),
                             rect.bottom - m, mColorPaint);
                 }
-                mShadowPaint.setColor(mood.color);
-                canvas.drawCircle(rect.centerX(), rect.centerY(), (int) (rect.height() * SECOND_LAYER / 2), mShadowPaint);
             }
 
             for (int i = moods.length - 1; i >= mSelectedItem; i--) {
-                Mood mood = moods[i];
                 Rect rect = mRects[i];
                 mColorPaint.setStyle(Paint.Style.FILL);
                 if (i < moods.length - 1) {
@@ -486,6 +482,18 @@ public class EmojiRateSlider extends View {
                     canvas.drawRect(start.centerX(), start.top + m, rect.centerX(),
                             rect.bottom - m, mColorPaint);
                 }
+            }
+
+            for (int i = 0; i <= mSelectedItem; i++) {
+                Mood mood = moods[i];
+                Rect rect = mRects[i];
+                mShadowPaint.setColor(mood.color);
+                canvas.drawCircle(rect.centerX(), rect.centerY(), (int) (rect.height() * SECOND_LAYER / 2), mShadowPaint);
+            }
+
+            for (int i = moods.length - 1; i >= mSelectedItem; i--) {
+                Mood mood = moods[i];
+                Rect rect = mRects[i];
                 mShadowPaint.setColor(mood.color);
                 canvas.drawCircle(rect.centerX(), rect.centerY(), (int) (rect.height() * SECOND_LAYER / 2), mShadowPaint);
             }
