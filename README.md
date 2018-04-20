@@ -17,7 +17,7 @@ Sample APP
 --------
 [Download](https://github.com/naz013/emoji-rate-slider/raw/master/res/app-release.apk)
 
-[Google Play](https://play.google.com/store/apps/details?id=com.hexrain.design.quicksms)
+[Google Play](https://play.google.com/store/apps/details?id=com.github.naz013.emojirateslider)
 
 
 Download
