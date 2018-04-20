@@ -161,6 +161,14 @@ public class EmojiRateSlider extends View {
         invalidate();
     }
 
+    public void setMax(int max) {
+        if (max < 3) {
+            throw new IllegalArgumentException("Max must be greater or equal of 3");
+        }
+        this.mMax = max;
+        invalidate();
+    }
+
     public void setOnMoodChangeListener(@Nullable OnMoodChangeListener onMoodChangeListener) {
         this.onMoodChangeListener = onMoodChangeListener;
     }
@@ -203,6 +211,9 @@ public class EmojiRateSlider extends View {
     }
 
     public void setSelectedItem(int selectedItem) {
+        if (selectedItem >= mMax) {
+            throw new IllegalArgumentException("You cannot select value greater than max");
+        }
         this.mSelectedItem = selectedItem;
         invalidate();
     }
