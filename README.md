@@ -1,5 +1,8 @@
-# EmojiRateSlider
-Simple emoji rate picker slider
+# Emoji Rate Picker View
+
+![alt text](https://github.com/naz013/emoji-rate-slider/raw/master/res/app_icon.png "Emoji Rate Picker View")
+
+Simple emoji rate picker slider view.
 
 Inspired by this work - https://www.uplabs.com/posts/on-off-switch-daily-ui-015-art
 --------
@@ -10,6 +13,12 @@ Screenshot
 
 <img src="https://github.com/naz013/emoji-rate-slider/raw/master/res/screenshot.png" width="400" alt="Screenshot">
 
+Sample APP
+--------
+[Download](../res/app-release.apk)
+[Google Play](https://play.google.com/store/apps/details?id=com.hexrain.design.quicksms)
+
+
 Download
 --------
 Download latest version with Gradle:
@@ -19,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.naz013:emoji-rate-slider:1.0.0'
+    implementation 'com.github.naz013:emoji-rate-slider:1.0.1'
 }
 ```
 
