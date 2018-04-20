@@ -13,11 +13,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.Px;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -57,6 +59,7 @@ public class EmojiRateSlider extends View {
     private boolean hasWeird = true;
     private boolean wasSlided = false;
     private boolean isTapped = false;
+    private boolean isCustom = false;
 
     @ColorInt
     private int mSadColor = Color.RED;
@@ -66,6 +69,8 @@ public class EmojiRateSlider extends View {
     private int mWeirdColor = Color.YELLOW;
     @ColorInt
     private int mBgColor = Color.WHITE;
+    @Nullable
+    private Mood[] moods = null;
 
     private Drawable mSmileIcon;
     private Drawable mSadIcon;
@@ -128,23 +133,52 @@ public class EmojiRateSlider extends View {
 
                 int idHappy = a.getResourceId(R.styleable.EmojiRateSlider_ers_icon_happy, 0);
                 if (idHappy != 0) {
-                    mSmileIcon = VectorDrawableCompat.create(getContext().getResources(), idHappy, null);
+                    mSmileIcon = getIcon(idHappy);
                 }
 
                 int idSad = a.getResourceId(R.styleable.EmojiRateSlider_ers_icon_sad, 0);
                 if (idSad != 0) {
-                    mSadIcon = VectorDrawableCompat.create(getContext().getResources(), idSad, null);
+                    mSadIcon = getIcon(idSad);
                 }
 
                 int idWeird = a.getResourceId(R.styleable.EmojiRateSlider_ers_icon_weird, 0);
                 if (idWeird != 0) {
-                    mWeirdIcon = VectorDrawableCompat.create(getContext().getResources(), idWeird, null);
+                    mWeirdIcon = getIcon(idWeird);
                 }
             } catch (Exception ignored) {
             } finally {
                 a.recycle();
             }
         }
+    }
+
+    private Drawable getIcon(@DrawableRes int id) {
+        return VectorDrawableCompat.create(getContext().getResources(), id, null);
+    }
+
+    public void setMoods(Emoji[] emojis) {
+        if (emojis == null || emojis.length < 3) {
+            throw new IllegalArgumentException("Array must contain at least 3 items");
+        }
+        this.mMax = emojis.length;
+        this.mSelectedItem = mMax / 2;
+        this.isCustom = true;
+        this.moods = new Mood[mMax];
+        for (int i = 0; i < mMax; i++) {
+            this.moods[i] = convert(emojis[i]);
+        }
+        invalidate();
+    }
+
+    public void setMoods(Mood[] moods) {
+        if (moods == null || moods.length < 3) {
+            throw new IllegalArgumentException("Array must contain at least 3 items");
+        }
+        this.mMax = moods.length;
+        this.mSelectedItem = mMax / 2;
+        this.isCustom = true;
+        this.moods = moods;
+        invalidate();
     }
 
     public void setHasWeird(boolean hasWeird) {
@@ -225,34 +259,40 @@ public class EmojiRateSlider extends View {
         if (selectedItem >= mMax) {
             throw new IllegalArgumentException("You cannot select value greater than max");
         }
+        int from = mSelectedItem;
         this.mSelectedItem = selectedItem;
-        invalidate();
+        animate(from, selectedItem);
     }
 
     private boolean processTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             wasSlided = false;
             isTapped = true;
-            if (mAnimator != null) mAnimator.cancel();
+            cancelAnimation();
             mPrevX = event.getX();
-            invalidate();
+            Log.d(TAG, "processTouch: down ");
+            animate(mSelectedItem, findIndex(event.getX(), event.getY()));
             return true;
         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            if (Math.abs(event.getX() - mPrevX) > 25) {
+            if (Math.abs(event.getX() - mPrevX) > 50) {
                 wasSlided = true;
             }
+            Log.d(TAG, "processTouch: move " + wasSlided);
             updateView(event.getX(), event.getY(), true);
             return true;
         } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            Log.d(TAG, "processTouch: up " + wasSlided);
             isTapped = false;
             if (!wasSlided) animate(mSelectedItem, findIndex(event.getX(), event.getY()));
             else invalidate();
+            return true;
         }
         return false;
     }
 
     private void animate(int from, int to) {
         if (from != to) {
+            cancelAnimation();
             Rect rFrom = mRects[from];
             Rect rTo = mRects[to];
 
@@ -279,7 +319,13 @@ public class EmojiRateSlider extends View {
             });
             animator.start();
             mAnimator = animator;
+        } else {
+            invalidate();
         }
+    }
+
+    private void cancelAnimation() {
+        if (mAnimator != null) mAnimator.cancel();
     }
 
     private void updateView(float x, float y, boolean notify) {
@@ -323,8 +369,12 @@ public class EmojiRateSlider extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawBackgroundLayer(canvas);
-        drawNegative(canvas);
-        drawPositive(canvas);
+        if (isCustom) {
+            drawMoods(canvas);
+        } else {
+            drawNegative(canvas);
+            drawPositive(canvas);
+        }
         drawCurrent(canvas);
     }
 
@@ -335,21 +385,27 @@ public class EmojiRateSlider extends View {
         int radius = h / 2;
         int m = (rect.height() - h) / 2;
 
-        if (isPositive()) mShadowPaint.setColor(mHappyColor);
-        else if (isNegative()) mShadowPaint.setColor(mSadColor);
-        else if (hasWeird) mShadowPaint.setColor(mWeirdColor);
+        Drawable icon = null;
+
+        if (isCustom && moods != null) {
+            Mood mood = moods[mSelectedItem];
+            mShadowPaint.setColor(mood.color);
+            icon = mood.icon;
+        } else if (isPositive()) {
+            mShadowPaint.setColor(mHappyColor);
+            icon = mSmileIcon;
+        } else if (isNegative()) {
+            mShadowPaint.setColor(mSadColor);
+            icon = mSadIcon;
+        } else if (hasWeird) {
+            mShadowPaint.setColor(mWeirdColor);
+            icon = mWeirdIcon;
+        }
 
         canvas.drawCircle(rect.centerX(), rect.centerY(), radius, mShadowPaint);
-
-        if (isPositive()) {
-            mSmileIcon.setBounds(rect.left + m, rect.top + m, rect.right - m, rect.bottom - m);
-            mSmileIcon.draw(canvas);
-        } else if (isNegative()) {
-            mSadIcon.setBounds(rect.left + m, rect.top + m, rect.right - m, rect.bottom - m);
-            mSadIcon.draw(canvas);
-        } else if (hasWeird) {
-            mWeirdIcon.setBounds(rect.left + m, rect.top + m, rect.right - m, rect.bottom - m);
-            mWeirdIcon.draw(canvas);
+        if (icon != null) {
+            icon.setBounds(rect.left + m, rect.top + m, rect.right - m, rect.bottom - m);
+            icon.draw(canvas);
         }
     }
 
@@ -367,18 +423,12 @@ public class EmojiRateSlider extends View {
         if (mSelectedItem < mMax - 1) {
             Rect start = mRects[mSelectedItem];
             Rect end = mRects[mMax - 1];
-
             mColorPaint.setColor(mSadColor);
             mColorPaint.setStyle(Paint.Style.FILL);
-
             int h = (int) (start.height() * SECOND_LAYER);
             int m = (start.height() - h) / 2;
-
-            canvas.drawRect(start.centerX(), start.top + m, end.centerX(),
-                    end.bottom - m, mColorPaint);
-
+            canvas.drawRect(start.centerX(), start.top + m, end.centerX(), end.bottom - m, mColorPaint);
             mShadowPaint.setColor(mSadColor);
-
             for (int i = mMax - 1; i > mSelectedItem; i--) {
                 Rect rect = mRects[i];
                 canvas.drawCircle(rect.centerX(), rect.centerY(), (int) (rect.height() * SECOND_LAYER / 2), mShadowPaint);
@@ -390,20 +440,53 @@ public class EmojiRateSlider extends View {
         if (mSelectedItem > 0) {
             Rect start = mRects[0];
             Rect end = mRects[mSelectedItem];
-
             mColorPaint.setColor(mHappyColor);
             mColorPaint.setStyle(Paint.Style.FILL);
-
             int h = (int) (start.height() * SECOND_LAYER);
             int m = (start.height() - h) / 2;
-
-            canvas.drawRect(start.centerX(), start.top + m, end.centerX(),
-                    end.bottom - m, mColorPaint);
-
+            canvas.drawRect(start.centerX(), start.top + m, end.centerX(), end.bottom - m, mColorPaint);
             mShadowPaint.setColor(mHappyColor);
-
             for (int i = 0; i < mSelectedItem; i++) {
                 Rect rect = mRects[i];
+                canvas.drawCircle(rect.centerX(), rect.centerY(), (int) (rect.height() * SECOND_LAYER / 2), mShadowPaint);
+            }
+        }
+    }
+
+    private void drawMoods(Canvas canvas) {
+        if (moods != null) {
+            for (int i = 0; i <= mSelectedItem; i++) {
+                Mood mood = moods[i];
+                Rect rect = mRects[i];
+                mColorPaint.setStyle(Paint.Style.FILL);
+                mColorPaint.setColor(mBgColor);
+                if (i > 0) {
+                    Rect start = mRects[i - 1];
+                    Mood mood1 = moods[i - 1];
+                    int h = (int) (start.height() * SECOND_LAYER);
+                    int m = (start.height() - h) / 2;
+                    mColorPaint.setColor(mood1.color);
+                    canvas.drawRect(start.centerX(), start.top + m, rect.centerX(),
+                            rect.bottom - m, mColorPaint);
+                }
+                mShadowPaint.setColor(mood.color);
+                canvas.drawCircle(rect.centerX(), rect.centerY(), (int) (rect.height() * SECOND_LAYER / 2), mShadowPaint);
+            }
+
+            for (int i = moods.length - 1; i >= mSelectedItem; i--) {
+                Mood mood = moods[i];
+                Rect rect = mRects[i];
+                mColorPaint.setStyle(Paint.Style.FILL);
+                if (i < moods.length - 1) {
+                    Rect start = mRects[i + 1];
+                    Mood mood1 = moods[i + 1];
+                    int h = (int) (start.height() * SECOND_LAYER);
+                    int m = (start.height() - h) / 2;
+                    mColorPaint.setColor(mood1.color);
+                    canvas.drawRect(start.centerX(), start.top + m, rect.centerX(),
+                            rect.bottom - m, mColorPaint);
+                }
+                mShadowPaint.setColor(mood.color);
                 canvas.drawCircle(rect.centerX(), rect.centerY(), (int) (rect.height() * SECOND_LAYER / 2), mShadowPaint);
             }
         }
@@ -412,19 +495,14 @@ public class EmojiRateSlider extends View {
     private void drawBackgroundLayer(Canvas canvas) {
         Rect start = mRects[0];
         Rect end = mRects[mRects.length - 1];
-
         mShadowPaint.setColor(mBgColor);
-
         int h = (int) (start.height() * FIRST_LAYER);
         int m = (start.height() - h) / 2;
-
         canvas.drawRect(start.centerX() + m, start.top + m, end.centerX() - m, end.bottom - m, mShadowPaint);
         canvas.drawCircle(start.centerX(), start.centerY(), (int) (start.height() * FIRST_LAYER / 2), mShadowPaint);
         canvas.drawCircle(end.centerX(), end.centerY(), (int) (end.height() * FIRST_LAYER / 2), mShadowPaint);
-
         mColorPaint.setColor(mBgColor);
         mColorPaint.setStyle(Paint.Style.FILL);
-
         canvas.drawRect(start.centerX(), start.top + m, end.centerX(), end.bottom - m, mColorPaint);
     }
 
@@ -483,6 +561,33 @@ public class EmojiRateSlider extends View {
             display.getMetrics(displaymetrics);
         }
         return (int) (dp * displaymetrics.density + 0.5f);
+    }
+
+    private Mood convert(Emoji emoji) {
+        return new Mood(getIcon(emoji.icon), emoji.color);
+    }
+
+    private static class Mood {
+        private Drawable icon;
+        @ColorInt
+        private int color;
+
+        private Mood(Drawable icon, @ColorInt int color) {
+            this.icon = icon;
+            this.color = color;
+        }
+    }
+
+    public static class Emoji {
+        @DrawableRes
+        private int icon;
+        @ColorInt
+        private int color;
+
+        public Emoji(@DrawableRes int icon, @ColorInt int color) {
+            this.icon = icon;
+            this.color = color;
+        }
     }
 
     public interface OnMoodChangeListener {

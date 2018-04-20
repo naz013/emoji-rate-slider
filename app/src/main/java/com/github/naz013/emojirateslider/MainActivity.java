@@ -1,5 +1,6 @@
 package com.github.naz013.emojirateslider;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,19 @@ public class MainActivity extends AppCompatActivity implements EmojiRateSlider.O
 
         EmojiRateSlider slider2 = findViewById(R.id.mood_slider3);
         slider2.setOnMoodChangeListener(this);
+        slider2.setMoods(getMoods());
+    }
+
+    private EmojiRateSlider.Emoji[] getMoods() {
+        EmojiRateSlider.Emoji[] emojis = new EmojiRateSlider.Emoji[7];
+        emojis[0] = new EmojiRateSlider.Emoji(R.drawable.ic_crying, Color.parseColor("#F44336"));
+        emojis[1] = new EmojiRateSlider.Emoji(R.drawable.ic_bored, Color.parseColor("#E91E63"));
+        emojis[2] = new EmojiRateSlider.Emoji(R.drawable.ic_sad, Color.parseColor("#9C27B0"));
+        emojis[3] = new EmojiRateSlider.Emoji(R.drawable.ic_weird, Color.parseColor("#2196F3"));
+        emojis[4] = new EmojiRateSlider.Emoji(R.drawable.ic_smile, Color.parseColor("#00BCD4"));
+        emojis[5] = new EmojiRateSlider.Emoji(R.drawable.ic_laught, Color.parseColor("#4CAF50"));
+        emojis[6] = new EmojiRateSlider.Emoji(R.drawable.ic_in_love, Color.parseColor("#FF9800"));
+        return emojis;
     }
 
     @Override
