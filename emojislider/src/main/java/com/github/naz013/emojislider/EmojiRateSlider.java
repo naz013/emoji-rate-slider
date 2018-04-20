@@ -37,6 +37,7 @@ import android.view.WindowManager;
  */
 public class EmojiRateSlider extends View {
 
+    private static final String TAG = "EmojiRateSlider";
     private static final float FIRST_LAYER = 0.82f;
     private static final float SECOND_LAYER = 0.72f;
     private static final float THIRD_LAYER = 0.97f;
@@ -232,9 +233,12 @@ public class EmojiRateSlider extends View {
         float minDist = calcDist(x, y, mRects[0]);
         for (int i = 0; i < mRects.length; i++) {
             Rect rect = mRects[i];
-            if (rect != null && rect.contains((int) x, (int) y)) {
+            if (rect != null) {
                 float dist = calcDist(x, y, rect);
-                if (dist < minDist) selected = i;
+                if (dist < minDist) {
+                    minDist = dist;
+                    selected = i;
+                }
             }
         }
         if (selected != mSelectedItem) {
@@ -245,7 +249,9 @@ public class EmojiRateSlider extends View {
     }
 
     private float calcDist(float x, float y, Rect rect) {
-        return (float) Math.sqrt(Math.pow(rect.centerX() - x, 2) + Math.pow(rect.centerY() - y, 2));
+        float xDiff = rect.centerX() - x;
+        float yDiff = rect.centerY() - y ;
+        return (float) Math.sqrt((xDiff * xDiff) + (yDiff * yDiff));
     }
 
     private void notifyChanged() {
