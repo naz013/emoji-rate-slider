@@ -1,6 +1,6 @@
 # Emoji Rate Picker View
 
-![alt text](https://github.com/naz013/emoji-rate-slider/raw/master/res/app_icon.png "Emoji Rate Picker View")
+<img src="https://github.com/naz013/emoji-rate-slider/raw/master/res/app_icon.png" width="100" alt="Emoji Rate Picker View">
 
 Simple emoji rate picker slider view.
 
@@ -15,7 +15,7 @@ Screenshot
 
 Sample APP
 --------
-[Download](../res/app-release.apk)
+[Download](https://github.com/naz013/emoji-rate-slider/raw/master/res/app-release.apk)
 [Google Play](https://play.google.com/store/apps/details?id=com.hexrain.design.quicksms)
 
 
