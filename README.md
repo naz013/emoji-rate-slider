@@ -4,7 +4,7 @@
 
 Simple emoji rate picker slider view.
 
-Inspired by this work - https://www.uplabs.com/posts/on-off-switch-daily-ui-015-art
+Inspired by this work - [UpLabs](https://www.uplabs.com/posts/on-off-switch-daily-ui-015-art)
 --------
 
 [![](https://jitpack.io/v/naz013/emoji-rate-slider.svg)](https://jitpack.io/#naz013/emoji-rate-slider)
@@ -16,6 +16,7 @@ Screenshot
 Sample APP
 --------
 [Download](https://github.com/naz013/emoji-rate-slider/raw/master/res/app-release.apk)
+
 [Google Play](https://play.google.com/store/apps/details?id=com.hexrain.design.quicksms)
 
 
