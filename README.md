@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.naz013:emoji-rate-slider:1.0.1'
+    implementation 'com.github.naz013:emoji-rate-slider:1.0.2'
 }
 ```
 
