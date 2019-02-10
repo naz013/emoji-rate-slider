@@ -1,9 +1,13 @@
 package com.github.naz013.emojirateslider;
 
+import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -43,5 +47,26 @@ public class MainActivity extends AppCompatActivity implements EmojiRateSlider.O
     public void onMoodChanged(View view, int mood) {
         Log.d("MainActivity", "onMoodChanged: " + mood);
         Toast.makeText(this, "Selected " + mood, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_info) {
+            showGithub();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showGithub() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("https://github.com/naz013/emoji-rate-slider"));
+        startActivity(intent);
     }
 }
