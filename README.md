@@ -1,4 +1,5 @@
 # Emoji Rate Picker View
+[![](https://jitpack.io/v/naz013/emoji-rate-slider.svg)](https://jitpack.io/#naz013/emoji-rate-slider)
 
 <img src="https://github.com/naz013/emoji-rate-slider/raw/master/res/app_icon.png" width="100" alt="Emoji Rate Picker View">
 
