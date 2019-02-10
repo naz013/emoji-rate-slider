@@ -156,6 +156,7 @@ public class EmojiRateSlider extends View {
         return VectorDrawableCompat.create(getContext().getResources(), id, null);
     }
 
+    @SuppressWarnings("unused")
     public void setMoods(Emoji[] emojis) {
         if (emojis == null || emojis.length < 3) {
             throw new IllegalArgumentException("Array must contain at least 3 items");
@@ -170,6 +171,7 @@ public class EmojiRateSlider extends View {
         invalidate();
     }
 
+    @SuppressWarnings("unused")
     public void setMoods(Mood[] moods) {
         if (moods == null || moods.length < 3) {
             throw new IllegalArgumentException("Array must contain at least 3 items");
@@ -181,31 +183,37 @@ public class EmojiRateSlider extends View {
         invalidate();
     }
 
+    @SuppressWarnings("unused")
     public void setHasWeird(boolean hasWeird) {
         this.hasWeird = hasWeird;
         invalidate();
     }
 
+    @SuppressWarnings("unused")
     public void setBgColor(@ColorInt int color) {
         this.mBgColor = color;
         invalidate();
     }
 
+    @SuppressWarnings("unused")
     public void setHappyColor(@ColorInt int color) {
         this.mHappyColor = color;
         invalidate();
     }
 
+    @SuppressWarnings("unused")
     public void setSadColor(@ColorInt int color) {
         this.mSadColor = color;
         invalidate();
     }
 
+    @SuppressWarnings("unused")
     public void setWeirdColor(@ColorInt int color) {
         this.mWeirdColor = color;
         invalidate();
     }
 
+    @SuppressWarnings("unused")
     public void setMax(int max) {
         if (max < 3) {
             throw new IllegalArgumentException("Max must be greater or equal of 3");
@@ -214,47 +222,57 @@ public class EmojiRateSlider extends View {
         invalidate();
     }
 
+    @SuppressWarnings("unused")
     public void setOnMoodChangeListener(@Nullable OnMoodChangeListener onMoodChangeListener) {
         this.onMoodChangeListener = onMoodChangeListener;
     }
 
     @Nullable
+    @SuppressWarnings("unused")
     public OnMoodChangeListener getOnMoodChangeListener() {
         return onMoodChangeListener;
     }
 
+    @SuppressWarnings("unused")
     public boolean isHasWeird() {
         return hasWeird;
     }
 
     @ColorInt
+    @SuppressWarnings("unused")
     public int getBgColor() {
         return mBgColor;
     }
 
     @ColorInt
+    @SuppressWarnings("unused")
     public int getHappyColor() {
         return mHappyColor;
     }
 
+    @SuppressWarnings("unused")
     public int getMax() {
         return mMax;
     }
 
     @ColorInt
+    @SuppressWarnings("unused")
     public int getSadColor() {
         return mSadColor;
     }
 
+    @SuppressWarnings("unused")
     public int getSelectedItem() {
         return mSelectedItem;
     }
 
     @ColorInt
+    @SuppressWarnings("unused")
     public int getWeirdColor() {
         return mWeirdColor;
     }
 
+    @SuppressWarnings("unused")
     public void setSelectedItem(int selectedItem) {
         if (selectedItem >= mMax) {
             throw new IllegalArgumentException("You cannot select value greater than max");
