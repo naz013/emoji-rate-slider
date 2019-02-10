@@ -15,7 +15,7 @@ Screenshot
 
 Sample APP
 --------
-[Download](https://github.com/naz013/emoji-rate-slider/raw/master/res/app-release.apk)
+[Download](https://github.com/naz013/emoji-rate-slider/raw/master/app/release/app-release.apk)
 
 [Google Play](https://play.google.com/store/apps/details?id=com.github.naz013.emojirateslider)
 
@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.naz013:emoji-rate-slider:1.0.4'
+    implementation 'com.github.naz013:emoji-rate-slider:1.0.5'
 }
 ```
 
@@ -53,7 +53,7 @@ Usage
 License
 -------
 
-    Copyright 2018 Nazar Suhovich
+    Copyright 2019 Nazar Suhovich
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
